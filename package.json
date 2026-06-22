@@ -1,0 +1,30 @@
+{
+  "name": "@traveloka/tin-rules-component",
+  "version": "1.0.1",
+  "main": "dist/commonjs/index.js",
+  "module": "dist/es/index.js",
+  "license": "MIT",
+  "types": "dist/types/index.d.ts",
+  "repository": "git@github.com:traveloka/soya-monorepo.git",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "yarn build:es",
+    "build:es": "BABEL_ENV=es babel --root-mode upward src --out-dir dist/es --source-maps --delete-dir-on-start --no-comments --extensions .ts,.tsx,.js --ignore=**/*.stories.js",
+    "watch": "concurrently -c \"green\" -k -n \"es\" \"yarn build:es -w\"",
+    "prepublish": "yarn build",
+    "lint": "eslint src"
+  },
+  "peerDependencies": {
+    "@emotion/css": "^11.10.6",
+    "@traveloka/soya-components": "^2.0.11",
+    "immutability-helper": "^2.6.6",
+    "prop-types": "^15.6.0",
+    "react": "^18 || ^19",
+    "react-dom": "^18 || ^19",
+    "react-redux": "^7.2.4",
+    "redux": "^4.2.0"
+  }
+}

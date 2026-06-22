@@ -1,0 +1,14 @@
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.popoverPanel = exports.popover = void 0;
+var _taggedTemplateLiteral2 = _interopRequireDefault(require("@babel/runtime/helpers/taggedTemplateLiteral"));
+var _css = require("@emotion/css");
+var _templateObject, _templateObject2, _templateObject3;
+var popoverPanel = exports.popoverPanel = (0, _css.css)(_templateObject || (_templateObject = (0, _taggedTemplateLiteral2["default"])(["\n  /* stylelint-disable-line block-no-empty */\n"])));
+var popover = exports.popover = (0, _css.css)(_templateObject2 || (_templateObject2 = (0, _taggedTemplateLiteral2["default"])(["\n  display: inline-block;\n  position: relative;\n\n  & .popoverPanelRuleMgmt {\n    display: none;\n    position: absolute;\n    background: #2f323d;\n    border: 1px solid #2f323d;\n    border-radius: 3px;\n    margin-top: 3px;\n    right: 0;\n    z-index: 3;\n    min-width: 200px;\n    box-shadow: 0 2px 4px 0 rgba(163, 200, 214, 0.5);\n    padding: 10px;\n  }\n\n  &.white .popoverPanelRuleMgmt {\n    background: #fff;\n    box-shadow: 0 2px 4px 0 rgba(163, 200, 214, 0.2);\n    border: 1px solid #e0e6ed;\n    font-size: 14px;\n    padding: 0;\n    min-width: 0;\n  }\n\n  &.white .popoverPanelRuleMgmt::after {\n    display: none;\n  }\n\n  &.white .popoverPanelRuleMgmt a {\n    padding: 0 15px;\n    display: block;\n    line-height: 35px;\n    color: #434343;\n    white-space: nowrap;\n  }\n\n  &.white .popoverPanelRuleMgmt a:hover {\n    background-color: #f7f7f7;\n  }\n\n  &.left .popoverPanelRuleMgmt {\n    right: auto;\n    left: 0;\n  }\n\n  & .popoverPanelRuleMgmt::after {\n    content: \"\";\n    display: block;\n    position: absolute;\n    top: -5px;\n    right: 7px;\n    border-right: 10px solid transparent;\n    border-left: 10px solid transparent;\n    border-bottom: 10px solid #2f323d;\n  }\n\n  &.left .popoverPanelRuleMgmt::after {\n    left: 7px;\n    right: auto;\n  }\n\n  & .popoverPanelRuleMgmt.open {\n    display: block;\n    -webkit-animation: ani-fadein 0.2s ease-in-out both;\n    animation: ani-fadein 0.2s ease-in-out both;\n  }\n"])));
+(0, _css.injectGlobal)(_templateObject3 || (_templateObject3 = (0, _taggedTemplateLiteral2["default"])(["\n  @-webkit-keyframes ani-fadein {\n    0%,\n    20% {\n      opacity: 0;\n      top: 0;\n    }\n\n    100% {\n      opacity: 1;\n      top: 20px;\n    }\n  }\n\n  @keyframes ani-fadein {\n    0%,\n    20% {\n      opacity: 0;\n      top: 0;\n    }\n\n    100% {\n      opacity: 1;\n      top: 20px;\n    }\n  }\n"])));
+//# sourceMappingURL=ToggleTooltip.styles.js.map

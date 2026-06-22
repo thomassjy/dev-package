@@ -1,0 +1,14 @@
+import _taggedTemplateLiteral from "@babel/runtime/helpers/taggedTemplateLiteral";
+var _templateObject, _templateObject2, _templateObject3, _templateObject4, _templateObject5, _templateObject6, _templateObject7, _templateObject8, _templateObject9;
+import { css } from "@emotion/css";
+export var listIcon = css(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  position: fixed;\n  right: 40px;\n  padding-bottom: 20px;\n  bottom: 80px;\n  z-index: 1;\n\n  &:hover {\n    visibility: visible;\n    opacity: 1;\n  }\n"])));
+export var buttonChildren = css(_templateObject2 || (_templateObject2 = _taggedTemplateLiteral(["\n  background-color: #fff;\n  border-radius: 50%;\n  text-align: center;\n  box-shadow: 0 2px 4px 0 rgba(163, 200, 214, 0.2);\n  border: 1px solid #e0e6ed;\n  width: 50px;\n  height: 50px;\n  display: block;\n  padding-top: 13px;\n  cursor: pointer;\n  transition: background-color 0.4s ease;\n  label: buttonChildrenLabel;\n\n  & > a {\n    color: #434343;\n  }\n"])));
+export var childIcon = css(_templateObject3 || (_templateObject3 = _taggedTemplateLiteral(["\n  font-size: 1.2em;\n"])));
+var _float = css(_templateObject4 || (_templateObject4 = _taggedTemplateLiteral(["\n  position: fixed;\n  width: 50px;\n  height: 50px;\n  bottom: 40px;\n  right: 40px;\n  background-color: #f36;\n  color: #fff;\n  border-radius: 50%;\n  text-align: center;\n  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);\n  z-index: 1;\n  cursor: pointer;\n"])));
+export { _float as float };
+export var labelContainer = css(_templateObject5 || (_templateObject5 = _taggedTemplateLiteral(["\n  text-align: right;\n  position: fixed;\n  margin-top: 16px;\n  right: 100px;\n  opacity: 0;\n  label: labelContainerLabel;\n"])));
+export var floatButtonChildren = css(_templateObject6 || (_templateObject6 = _taggedTemplateLiteral(["\n  vertical-align: middle;\n  margin-top: 10px;\n\n  &:hover [class$=\"buttonChildrenLabel\"] {\n    background-color: #f9f9f9;\n  }\n\n  &:hover [class$=\"labelContainerLabel\"] {\n    opacity: 1;\n  }\n"])));
+export var labelText = css(_templateObject7 || (_templateObject7 = _taggedTemplateLiteral(["\n  color: #fff;\n  background: rgb(48, 50, 61);\n  vertical-align: middle;\n  padding: 3px 10px;\n  border-radius: 3px;\n  font-size: 12px;\n"])));
+export var listButtonChildren = css(_templateObject8 || (_templateObject8 = _taggedTemplateLiteral(["\n  list-style: none;\n"])));
+export var mainFloatIcon = css(_templateObject9 || (_templateObject9 = _taggedTemplateLiteral(["\n  width: 20px;\n  height: 15px;\n  margin-left: 13px;\n  margin-top: 14px;\n  cursor: pointer;\n"])));
+//# sourceMappingURL=FloatButton.styles.js.map
