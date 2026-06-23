@@ -1,8 +1,5 @@
 import _slicedToArray from "@babel/runtime/helpers/slicedToArray";
 import _defineProperty from "@babel/runtime/helpers/defineProperty";
-function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
-function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
-function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 import update from "immutability-helper";
 var namespace = "commonrule";
 var ActionType = {
@@ -28,6 +25,41 @@ update.extend("$autoObject", function (value, object) {
 update.extend("$autoArray", function (value, object) {
   return object ? update(object, value) : update([], value);
 });
+function removeNodeAtPath(conditionsInput, path) {
+  var conditions = JSON.parse(JSON.stringify(conditionsInput || []));
+  conditions = removeAtPath(conditions, (path || []).map(normalizeKey));
+  return conditions;
+}
+function normalizeKey(idx) {
+  return isNaN(idx) ? idx : Number(idx);
+}
+function removeAtPath(conditions, keys) {
+  if (keys.length === 0) return conditions;
+  if (keys.length === 1) {
+    conditions.splice(Number(keys[0]), 1);
+    return conditions;
+  }
+  var opPath = keys.slice(0, keys.length - 2);
+  var leafIndex = Number(keys[keys.length - 1]);
+  var opParent = null;
+  var opParentKey = null;
+  var opNode = conditions;
+  for (var i = 0; i < opPath.length; i++) {
+    opParent = opNode;
+    opParentKey = opPath[i];
+    opNode = opNode == null ? undefined : opNode[opPath[i]];
+  }
+  if (opNode == null || !opNode.leaf || opParent == null) {
+    return conditions;
+  }
+  var sibling = opNode.leaf[leafIndex === 0 ? 1 : 0];
+  if (sibling && Object.keys(sibling).length > 0) {
+    opParent[opParentKey] = sibling;
+  } else {
+    return removeAtPath(conditions, opPath);
+  }
+  return conditions;
+}
 export var commonRulesSelector = {
   getRulesLength: function getRulesLength(state) {
     return state[namespace].rules.length;
@@ -218,74 +250,22 @@ export var commonRulesReducers = _defineProperty({}, namespace, function () {
       }
     case ActionType.REMOVE_CONDITION:
       {
-        var rmCondIndex = {};
-        for (var _i3 = action.conditionIndex.length - 1; _i3 >= 0; _i3--) {
-          var _idx3 = action.conditionIndex[_i3];
-          if (!isNaN(_idx3)) {
-            _idx3 = Number(_idx3);
-          }
-          if (_i3 === action.conditionIndex.length - 1) {
-            rmCondIndex = _defineProperty({}, _idx3, {
-              $set: {}
-            });
-          } else {
-            rmCondIndex = _defineProperty({}, _idx3, rmCondIndex);
-          }
-        }
-        if (rmCondIndex.length === 1 && action.conditionIndex.length === 1 && action.conditionIndex[0] === 0) {
-          rmCondIndex = [];
-        }
+        var conditions = removeNodeAtPath(state.rules[action.ruleIndex].conditions, action.conditionIndex);
         return update(state, {
           rules: _defineProperty({}, action.ruleIndex, {
-            conditions: rmCondIndex
+            conditions: {
+              $set: conditions
+            }
           })
         });
       }
     case ActionType.REMOVE_OPERATOR:
       {
-        var conditionIndex = action.conditionIndex.map(function (idx) {
-          return isNaN(idx) ? idx : Number(idx);
-        });
-        var conditions = JSON.parse(JSON.stringify(state.rules[action.ruleIndex].conditions || []));
-        var parent = null;
-        var parentKey = null;
-        var node = conditions;
-        for (var _i4 = 0; _i4 < conditionIndex.length; _i4++) {
-          parent = node;
-          parentKey = conditionIndex[_i4];
-          node = node == null ? undefined : node[conditionIndex[_i4]];
-        }
-        if (node == null || parent == null || parentKey == null) {
-          return state;
-        }
-        var children = [];
-        if (node.leaf && node.leaf.length > 0) {
-          if (node.leaf[0] && Object.keys(node.leaf[0]).length > 0) {
-            children.push(node.leaf[0]);
-          }
-          if (node.leaf.length > 1 && node.leaf[1] && Object.keys(node.leaf[1]).length > 0) {
-            children.push(node.leaf[1]);
-          }
-        }
-        var inPlace = children.length > 0 ? children[0] : {};
-        var lifted = children.slice(1);
-        parent[parentKey] = inPlace;
-        var _iterator = _createForOfIteratorHelper(lifted),
-          _step;
-        try {
-          for (_iterator.s(); !(_step = _iterator.n()).done;) {
-            var child = _step.value;
-            conditions.push(child);
-          }
-        } catch (err) {
-          _iterator.e(err);
-        } finally {
-          _iterator.f();
-        }
+        var _conditions = removeNodeAtPath(state.rules[action.ruleIndex].conditions, action.conditionIndex);
         return update(state, {
           rules: _defineProperty({}, action.ruleIndex, {
             conditions: {
-              $set: conditions
+              $set: _conditions
             }
           })
         });

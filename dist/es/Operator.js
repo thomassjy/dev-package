@@ -69,7 +69,7 @@ var Operator = function (_React$Component) {
     _defineProperty(_this, "handleRemoveCondition", function () {
       var value = _this.props.value;
       var isBinaryOperator = value && (value.toUpperCase() === "AND" || value.toUpperCase() === "OR");
-      var body = isBinaryOperator ? "Are you sure you want to delete this operator? Only the operator is removed \u2014 both conditions it joins are kept (the second one becomes a separate condition)." : "Are you sure you want to delete this operator? Its condition is kept.";
+      var body = isBinaryOperator ? "Are you sure you want to delete this operator? This removes the operator and all conditions grouped under it. To remove a single condition, use the Remove on that condition's row instead." : "Are you sure you want to delete this operator? This removes it and the condition grouped under it.";
       ModalManager.show({
         title: "Delete Operator",
         type: "default",
