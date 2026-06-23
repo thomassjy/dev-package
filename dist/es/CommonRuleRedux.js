@@ -1,5 +1,8 @@
 import _slicedToArray from "@babel/runtime/helpers/slicedToArray";
 import _defineProperty from "@babel/runtime/helpers/defineProperty";
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 import update from "immutability-helper";
 var namespace = "commonrule";
 var ActionType = {
@@ -243,29 +246,47 @@ export var commonRulesReducers = _defineProperty({}, namespace, function () {
         var conditionIndex = action.conditionIndex.map(function (idx) {
           return isNaN(idx) ? idx : Number(idx);
         });
-        var node = state.rules[action.ruleIndex].conditions;
+        var conditions = JSON.parse(JSON.stringify(state.rules[action.ruleIndex].conditions || []));
+        var parent = null;
+        var parentKey = null;
+        var node = conditions;
         for (var _i4 = 0; _i4 < conditionIndex.length; _i4++) {
-          if (node == null) break;
-          node = node[conditionIndex[_i4]];
+          parent = node;
+          parentKey = conditionIndex[_i4];
+          node = node == null ? undefined : node[conditionIndex[_i4]];
         }
-        var promotedChild = {};
-        if (node && node.leaf && node.leaf.length > 0) {
-          promotedChild = node.leaf.length > 1 ? node.leaf[1] : node.leaf[0];
+        if (node == null || parent == null || parentKey == null) {
+          return state;
         }
-        var rmOpIndex = {};
-        for (var _i5 = conditionIndex.length - 1; _i5 >= 0; _i5--) {
-          var _idx4 = conditionIndex[_i5];
-          if (_i5 === conditionIndex.length - 1) {
-            rmOpIndex = _defineProperty({}, _idx4, {
-              $set: promotedChild
-            });
-          } else {
-            rmOpIndex = _defineProperty({}, _idx4, rmOpIndex);
+        var children = [];
+        if (node.leaf && node.leaf.length > 0) {
+          if (node.leaf[0] && Object.keys(node.leaf[0]).length > 0) {
+            children.push(node.leaf[0]);
           }
+          if (node.leaf.length > 1 && node.leaf[1] && Object.keys(node.leaf[1]).length > 0) {
+            children.push(node.leaf[1]);
+          }
+        }
+        var inPlace = children.length > 0 ? children[0] : {};
+        var lifted = children.slice(1);
+        parent[parentKey] = inPlace;
+        var _iterator = _createForOfIteratorHelper(lifted),
+          _step;
+        try {
+          for (_iterator.s(); !(_step = _iterator.n()).done;) {
+            var child = _step.value;
+            conditions.push(child);
+          }
+        } catch (err) {
+          _iterator.e(err);
+        } finally {
+          _iterator.f();
         }
         return update(state, {
           rules: _defineProperty({}, action.ruleIndex, {
-            conditions: rmOpIndex
+            conditions: {
+              $set: conditions
+            }
           })
         });
       }

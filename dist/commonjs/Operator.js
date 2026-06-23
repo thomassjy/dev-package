@@ -78,7 +78,7 @@ var Operator = function (_React$Component) {
     (0, _defineProperty2["default"])(_this, "handleRemoveCondition", function () {
       var value = _this.props.value;
       var isBinaryOperator = value && (value.toUpperCase() === "AND" || value.toUpperCase() === "OR");
-      var body = isBinaryOperator ? "Are you sure you want to delete this operator? The item directly above it will be removed and the rest of the conditions will be kept." : "Are you sure you want to delete this operator? Its branch will be kept.";
+      var body = isBinaryOperator ? "Are you sure you want to delete this operator? Only the operator is removed \u2014 both conditions it joins are kept (the second one becomes a separate condition)." : "Are you sure you want to delete this operator? Its condition is kept.";
       _soyaComponents.ModalManager.show({
         title: "Delete Operator",
         type: "default",
